@@ -1,0 +1,26 @@
+{
+  "name": "instastore",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A simple storefront that runs entirely on Cloudflare. Clone, push, deploy, manage from an admin panel.",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --var ACCESS_DEV_BYPASS:true",
+    "deploy": "wrangler deploy",
+    "types": "wrangler types --strict-vars=false",
+    "check": "npm run types && tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "hono": "^4.13.8"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.22.0",
+    "@types/node": "^26.6.2",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11",
+    "wrangler": "^4.136.2"
+  }
+}

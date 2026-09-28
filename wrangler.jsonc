@@ -1,0 +1,42 @@
+/**
+ * Wrangler configuration for instastore.
+ *
+ * Nothing in this file needs to change to get a store running. Per-store
+ * settings (domain, Cloudflare Access, email) are set from the Cloudflare
+ * dashboard and GitHub repository variables — see README.md.
+ */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "instastore",
+  "main": "src/index.tsx",
+  "compatibility_date": "2026-08-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+
+  // Static files (CSS, images, scripts) are served straight from Cloudflare's edge.
+  "assets": { "directory": "./public" },
+
+  // All store data (settings, catalog, images, orders) lives in one
+  // SQLite-backed Durable Object. Nothing to provision.
+  "durable_objects": {
+    "bindings": [{ "name": "STORE", "class_name": "StoreDO" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["StoreDO"] }],
+
+  // Order notification emails (Cloudflare Email Sending). The sender address
+  // set in the admin panel must be on a domain onboarded to Email Sending.
+  "send_email": [{ "name": "EMAIL" }],
+
+  // Non-secret configuration. Values are injected by the deploy workflow from
+  // GitHub repository variables (`--var`); you can also hardcode them here.
+  "vars": {
+    // Your Zero Trust team domain, e.g. "mystore.cloudflareaccess.com".
+    "ACCESS_TEAM_DOMAIN": "",
+    // Application Audience (AUD) tag of the Access application protecting /admin.
+    "ACCESS_AUD": "",
+    // Lets `npm run dev` open /admin without Access. Only honoured on localhost.
+    "ACCESS_DEV_BYPASS": "false"
+  },
+
+  "observability": { "enabled": true }
+}
